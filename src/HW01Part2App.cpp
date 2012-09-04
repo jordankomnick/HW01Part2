@@ -17,7 +17,7 @@ class HW01Part2App : public AppBasic {
 	void draw();
 	void prepareSettings(Settings* settings);
 	void drawCircle(uint8_t* pixels, int center_x, int center_y, int radius, Color8u color);
-	void drawSquare(uint8_t* pixels, int corner_x, int corner_y, int width, Color8u color);
+	void drawRect(uint8_t* pixels, int corner_x, int corner_y, int width, int height, Color8u color);
 
 	private:
 	Surface* mySurface_;
@@ -45,7 +45,7 @@ void HW01Part2App::drawCircle(uint8_t* pixels, int center_x, int center_y, int r
 {
 	for(int y = center_y - radius; y <= center_y + radius; y++)
 	{
-		for(int x = center_x; x <= center_x + radius; x++)
+		for(int x = center_x - radius ; x <= center_x + radius; x++)
 		{
 			//Bounds test, to make sure we don't access array out of bounds
 			if(y < 0 || x < 0 || x >= kAppWidth || y >= kAppHeight) continue;
@@ -62,9 +62,9 @@ void HW01Part2App::drawCircle(uint8_t* pixels, int center_x, int center_y, int r
 	}
 }
 
-void HW01Part2App::drawSquare(uint8_t* pixels, int corner_x, int corner_y, int width, Color8u color)
+void HW01Part2App::drawRect(uint8_t* pixels, int corner_x, int corner_y, int width, int height, Color8u color)
 {
-	for(int y = corner_y; y <= corner_y + width; y++)
+	for(int y = corner_y; y <= corner_y + height; y++)
 	{
 		for(int x = corner_x; x <= corner_x + width; x++)
 		{
@@ -88,7 +88,7 @@ void HW01Part2App::update()
 {
 	uint8_t* dataArray = (*mySurface_).getData();
 	drawCircle(dataArray, 200, 200, 50, Color8u(0,255,0));
-	drawSquare(dataArray, 400, 400, 50, Color8u(255,0,0));
+	drawRect(dataArray, 400, 400, 50, 100, Color8u(255,0,0));
 	drawCircle(dataArray, 450, 200, 100, Color8u(0,0,255));
 }
 
