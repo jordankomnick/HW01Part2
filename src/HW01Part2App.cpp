@@ -20,7 +20,8 @@ class HW01Part2App : public AppBasic {
 	void drawRect(uint8_t* pixels, int corner_x, int corner_y, int width, int height, Color8u color);
 	void gradient(uint8_t* pixels, Color8u color1, Color8u color2);
 	void tint(uint8_t* pixels, Color8u color);
-
+	void blur(uint8_t* pixels);
+	
 	private:
 	Surface* mySurface_;
 	uint8_t* dataArray;
@@ -112,6 +113,34 @@ void HW01Part2App::drawRect(uint8_t* pixels, int corner_x, int corner_y, int wid
 	}
 }
 
+void HW01Part2App::blur(uint8_t* pixels)
+{
+	for(int y = 1; y <= kAppHeight-1; y++)
+	{
+		for(int x = 1; x <= kAppWidth-1; x++)
+		{
+			int offset = 3*(x + y*kTextureSize);
+			uint8_t r_total = 0;
+			uint8_t g_total = 0;
+			uint8_t b_total = 0;
+			for(int y2 = -1; y2 <= 1; y2++)
+			{
+				for(int x2 = -1; x2 <= 1; x2++)
+				{
+					int offset2 = 3*(x + x2 + (y + y2)*kTextureSize);
+					r_total += pixels[offset2];
+					g_total += pixels[offset2 + 1];
+					b_total += pixels[offset2 + 2];
+				}
+			}
+			pixels[offset] = r_total/9;
+			pixels[offset + 1] = g_total/9;
+			pixels[offset + 2] = b_total/9;
+			
+		}
+	}
+}
+
 void HW01Part2App::mouseDown( MouseEvent event )
 {
 
@@ -124,6 +153,7 @@ void HW01Part2App::update()
 	drawRect(dataArray, 400, 400, 50, 100, Color8u(255,0,0));
 	drawCircle(dataArray, 450, 200, 100, Color8u(0,0,255));
 	tint(dataArray, Color8u(0,255,0));
+	blur(dataArray);
 }
 
 void HW01Part2App::draw()
